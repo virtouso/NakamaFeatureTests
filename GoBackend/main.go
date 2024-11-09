@@ -2,6 +2,8 @@ package main
 
 import (
 	"TrueSoldier3dMetaServer/guards"
+	"TrueSoldier3dMetaServer/match_making"
+	"TrueSoldier3dMetaServer/reward"
 	"TrueSoldier3dMetaServer/session_management"
 	"context"
 	"database/sql"
@@ -34,19 +36,19 @@ func InitModule(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runti
 		DiscardUnknown: false,
 	}
 
-	if err := initializer.RegisterRpc(rpcIdRewards, rpcRewards); err != nil {
+	if err := initializer.RegisterRpc(rpcIdRewards, reward.RpcRewards); err != nil {
 		return err
 	}
 
-	if err := initializer.RegisterRpc(rpcIdFindMatch, rpcFindMatch(marshaler, unmarshaler)); err != nil {
+	if err := initializer.RegisterRpc(rpcIdFindMatch, match_making.RpcFindMatch(marshaler, unmarshaler)); err != nil {
 		return err
 	}
 
-	if err := initializer.RegisterMatch(moduleName, func(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule) (runtime.Match, error) {
-		return &MatchHandler{
-			marshaler:        marshaler,
-			unmarshaler:      unmarshaler,
-			tfServingAddress: "http://tf:8501/v1/models/ttt:predict",
+	if err := initializer.RegisterMatch(match_making.ModuleName, func(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule) (runtime.Match, error) {
+		return &match_making.MatchHandler{
+			Marshaler:        marshaler,
+			Unmarshaler:      unmarshaler,
+			TfServingAddress: "http://tf:8501/v1/models/ttt:predict",
 		}, nil
 	}); err != nil {
 		return err

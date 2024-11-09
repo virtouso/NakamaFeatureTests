@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	moduleName = "tic-tac-toe"
+	ModuleName = "tic-tac-toe"
 
 	tickRate = 5
 
@@ -46,9 +46,9 @@ type MatchLabel struct {
 }
 
 type MatchHandler struct {
-	marshaler        *protojson.MarshalOptions
-	unmarshaler      *protojson.UnmarshalOptions
-	tfServingAddress string
+	Marshaler        *protojson.MarshalOptions
+	Unmarshaler      *protojson.UnmarshalOptions
+	TfServingAddress string
 }
 
 type MatchState struct {
@@ -187,7 +187,7 @@ func (m *MatchHandler) MatchJoin(ctx context.Context, logger runtime.Logger, db 
 
 		// Send a message to the user that just joined, if one is needed based on the logic above.
 		if msg != nil {
-			buf, err := m.marshaler.Marshal(msg)
+			buf, err := m.Marshaler.Marshal(msg)
 			if err != nil {
 				logger.Error("error encoding message: %v", err)
 			} else {
@@ -309,7 +309,7 @@ func (m *MatchHandler) MatchLoop(ctx context.Context, logger runtime.Logger, db 
 		s.nextGameRemainingTicks = 0
 
 		// Notify the players a new game has started.
-		buf, err := m.marshaler.Marshal(&backApi.Start{
+		buf, err := m.Marshaler.Marshal(&backApi.Start{
 			Board:    s.board,
 			Marks:    s.marks,
 			Mark:     s.mark,
@@ -342,7 +342,7 @@ func (m *MatchHandler) MatchLoop(ctx context.Context, logger runtime.Logger, db 
 			}
 
 			msg := &backApi.Move{}
-			err := m.unmarshaler.Unmarshal(message.GetData(), msg)
+			err := m.Unmarshaler.Unmarshal(message.GetData(), msg)
 			if err != nil {
 				// Client sent bad data.
 				_ = dispatcher.BroadcastMessage(int64(backApi.OpCode_OPCODE_REJECTED), nil, []runtime.Presence{message}, nil, true)
@@ -414,7 +414,7 @@ func (m *MatchHandler) MatchLoop(ctx context.Context, logger runtime.Logger, db 
 				}
 			}
 
-			buf, err := m.marshaler.Marshal(outgoingMsg)
+			buf, err := m.Marshaler.Marshal(outgoingMsg)
 			if err != nil {
 				logger.Error("error encoding message: %v", err)
 			} else {
@@ -473,7 +473,7 @@ func (m *MatchHandler) MatchLoop(ctx context.Context, logger runtime.Logger, db 
 			s.deadlineRemainingTicks = 0
 			s.nextGameRemainingTicks = delayBetweenGamesSec * tickRate
 
-			buf, err := m.marshaler.Marshal(&backApi.Done{
+			buf, err := m.Marshaler.Marshal(&backApi.Done{
 				Board:         s.board,
 				Winner:        s.winner,
 				NextGameStart: t.Add(time.Duration(s.nextGameRemainingTicks/tickRate) * time.Second).Unix(),
