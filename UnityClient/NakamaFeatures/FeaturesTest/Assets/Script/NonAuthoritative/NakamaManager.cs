@@ -19,6 +19,8 @@ namespace Script.NonAuthoritative
             _client = new Client("http", "127.0.0.1", 7350, "defaultkey");
             _socket = _client.NewSocket();
 
+            var x= new Nakama.ser
+            
             // Authenticate the user
             _session = await _client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier);
             await _socket.ConnectAsync(_session);
