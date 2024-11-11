@@ -29,7 +29,7 @@ func RpcFindMatch(marshaler *protojson.MarshalOptions, unmarshaler *protojson.Un
 		// If AI flag is set just create a brand-new match
 		if request.Ai {
 			matchID, err := nk.MatchCreate(
-				ctx, moduleName, map[string]interface{}{
+				ctx, ModuleName, map[string]interface{}{
 					"ai": true, "fast": request.Fast})
 			if err != nil {
 				logger.Error("error creating match: %v", err)
@@ -68,7 +68,7 @@ func RpcFindMatch(marshaler *protojson.MarshalOptions, unmarshaler *protojson.Un
 			}
 		} else {
 			// No available matches found, create a new one.
-			matchID, err := nk.MatchCreate(ctx, moduleName, map[string]interface{}{"fast": request.Fast})
+			matchID, err := nk.MatchCreate(ctx, ModuleName, map[string]interface{}{"fast": request.Fast})
 			if err != nil {
 				logger.Error("error creating match: %v", err)
 				return "", helper.ErrInternalError

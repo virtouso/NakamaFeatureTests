@@ -113,7 +113,7 @@ func (m *MatchHandler) aiTurn(s *MatchState) error {
 	}
 
 	resp, err := http.Post(
-		m.tfServingAddress, "application/json", bytes.NewReader(raw))
+		m.TfServingAddress, "application/json", bytes.NewReader(raw))
 
 	if err != nil {
 		return fmt.Errorf("failed to make TF request: %w", err)
@@ -148,7 +148,7 @@ func (m *MatchHandler) aiTurn(s *MatchState) error {
 	// Append message to m.messages to be consumed by the next loop run
 	if aiMovePos > -1 {
 		move := &backApi.Move{Position: int32(aiMovePos)}
-		rawMove, err := m.marshaler.Marshal(move)
+		rawMove, err := m.Marshaler.Marshal(move)
 		if err != nil {
 			return fmt.Errorf("failed to marshal AI move: %w", err)
 		}
