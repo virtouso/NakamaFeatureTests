@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/NonAuth.unity
+    guid: d6160f305b5f18a419bd7589ba25e3fe
   m_configObjects: {}
