@@ -9,6 +9,7 @@ namespace Script.Gameplay
 
     public class Round
     {
+        public int Secret { get;  set; }
         public Dictionary<string, PlayerRoundData> Players { get; set; } = new();
     }
 
@@ -17,7 +18,7 @@ namespace Script.Gameplay
     {
         public string UserId { get; set; }
         public int GuessNumber { get; set; }
-        public int SecretNumber { get; set; }
+       // public int SecretNumber { get; set; }
         public bool RightGuess { get; set; }
     }
     
