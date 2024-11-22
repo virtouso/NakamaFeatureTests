@@ -70,6 +70,7 @@ public class NakamaAutomaticMatch : MonoBehaviour
 
         // Listen to match data
         socket.ReceivedMatchState += OnReceivedMatchState;
+        
         socket.ReceivedMatchmakerMatched += OnMatched;
         socket.ReceivedMatchPresence += OnMatchPresence;
     }

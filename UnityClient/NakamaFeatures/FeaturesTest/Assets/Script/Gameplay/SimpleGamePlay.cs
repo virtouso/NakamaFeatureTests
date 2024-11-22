@@ -98,7 +98,7 @@ namespace Script.Gameplay
 
             if (_isHost)
             {
-                CalculateGuess(session.UserId, guessNumber);
+                CalculateGuess(session.Username, guessNumber);
                 return;
             }
 
@@ -174,7 +174,7 @@ namespace Script.Gameplay
             string receivedMessage = System.Text.Encoding.UTF8.GetString(matchState.State);
             Debug.LogError($"Received from network match: {receivedMessage}");
 
-            int guessedNumber = int.Parse(receivedMessage);
+            
 
             Debug.LogError($"received match enum:{(OpCodes)matchState.OpCode}");
 
@@ -183,16 +183,17 @@ namespace Script.Gameplay
                 case OpCodes.RoundStart:
                     Debug.LogError($"Received Round Start:{matchState.State}");
                     ShowRoundNumberText(int.Parse(receivedMessage));
-                    OnRoundStarted.Invoke(int.Parse(receivedMessage));
+                    OnRoundStarted?.Invoke(int.Parse(receivedMessage));
                  
                     break;
                 case OpCodes.CalculateGuess:
+                    int guessedNumber = int.Parse(receivedMessage);
                     CalculateGuess(matchState.UserPresence.Username, guessedNumber);
                     break;
                 case OpCodes.MatchFinish:
                     Debug.LogError("received match finish state");
                     ShowFinalText(receivedMessage);
-                    OnGameFinished.Invoke(receivedMessage);
+                    OnGameFinished?.Invoke(receivedMessage);
                  
                     break;
             }
@@ -240,14 +241,25 @@ namespace Script.Gameplay
             for (int i = 0; i < RoundCount; i++)
             {
                 _gameData.Rounds.Add(new Round { Secret = _random.Next(0, 2) });
-                SendStartRound(i + 1);
+                 HandleStartRound(i);
+                
                 await Task.Delay(waitMiliseconds);
             }
 
             CastScores();
+            ShowFinalText(JsonConvert.SerializeObject(matchResults));
             await SendResponse();
         }
 
+
+        
+        
+        
+        private void HandleStartRound(int roundNumber)
+        {
+            ShowRoundNumberText(roundNumber);
+            SendStartRound(roundNumber );
+        }
 
         private Dictionary<string, int> matchResults = new();
 
@@ -276,7 +288,7 @@ namespace Script.Gameplay
 
         private async void ShowRoundNumberText(int obj)
         {
-            roundNumberText = $"New Round:{obj}";
+            roundNumberText = $"New Round:{obj+1}";
         //    await Task.Delay(1000);
           //  roundNumberText = "";
         }
@@ -284,9 +296,14 @@ namespace Script.Gameplay
 
         private void ShowFinalText(string obj)
         {
+            
+            Debug.LogError($"-final data method--{obj}");
+            
             var data = JsonConvert.DeserializeObject<Dictionary<string, int>>(obj);
             StringBuilder result = new StringBuilder();
 
+            result.Append("-----").Append(Environment.NewLine);
+            
             foreach (var item in data)
             {
                 result.Append($"{item.Key}: {item.Value}").Append(Environment.NewLine);
