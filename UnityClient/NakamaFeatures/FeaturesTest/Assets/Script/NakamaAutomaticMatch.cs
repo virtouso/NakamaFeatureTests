@@ -13,7 +13,7 @@ public class NakamaAutomaticMatch : MonoBehaviour
 
 
     private const string scheme = "http";
-    private const string host = "127.0.0.1";
+    private const string host = "116.203.192.124";
     private const int port = 7350;
     private const string serverKey = "defaultkey";
 
@@ -62,6 +62,7 @@ public class NakamaAutomaticMatch : MonoBehaviour
 
         // Authenticate with device ID
         session = await client.AuthenticateEmailAsync(emailText, "123456789");
+        
         Debug.LogError($"Authenticated: {session.UserId}");
 
         // Connect socket
@@ -121,17 +122,17 @@ public class NakamaAutomaticMatch : MonoBehaviour
         Debug.LogError($"ticket id:{ticket.Ticket}");
     }
 
-    private async void JoinMatch(string inputMatchId)
-    {
-        try
-        {
-            match = await socket.JoinMatchAsync(inputMatchId);
-            matchId = match.Id;
-            Debug.LogError($"Joined match with ID: {inputMatchId}");
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to join match: {e.Message}");
-        }
-    }
+    // private async void JoinMatch(string inputMatchId)
+    // {
+    //     try
+    //     {
+    //         match = await socket.JoinMatchAsync(inputMatchId);
+    //         matchId = match.Id;
+    //         Debug.LogError($"Joined match with ID: {inputMatchId}");
+    //     }
+    //     catch (Exception e)
+    //     {
+    //         Debug.LogError($"Failed to join match: {e.Message}");
+    //     }
+    // }
 }
