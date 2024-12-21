@@ -34,7 +34,7 @@ public class NakamaOnGuiTest : MonoBehaviour
         // Connect socket
         await socket.ConnectAsync(session);
         LogMessage("Socket connected.");
-
+   
         // Listen to match data
         socket.ReceivedMatchState += OnReceivedMatchState;
     }

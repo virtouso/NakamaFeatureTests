@@ -13,6 +13,9 @@ const (
 )
 
 func InitModule(ctx context.Context, logger runtime.Logger, db *sql.DB, nk runtime.NakamaModule, initializer runtime.Initializer) error {
+
+	initializer.custom
+
 	//err := guards.RegisterAllGuards(initializer)
 	//if err != nil {
 	//	return err

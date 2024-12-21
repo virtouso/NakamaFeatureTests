@@ -62,7 +62,7 @@ public class NakamaAutomaticMatch : MonoBehaviour
 
         // Authenticate with device ID
         session = await client.AuthenticateEmailAsync(emailText, "123456789");
-        
+    
         Debug.LogError($"Authenticated: {session.UserId}");
 
         // Connect socket
@@ -74,6 +74,7 @@ public class NakamaAutomaticMatch : MonoBehaviour
         
         socket.ReceivedMatchmakerMatched += OnMatched;
         socket.ReceivedMatchPresence += OnMatchPresence;
+      
     }
 
     private void OnMatchPresence(IMatchPresenceEvent message)

@@ -54,8 +54,9 @@ public class FriendShip : MonoBehaviour
         // Authenticate with device ID
         session = await client.AuthenticateEmailAsync(emailText, "123456789",emailText.Split('@')[0]);
         Debug.LogError($"Authenticated: {session.Username}");
-
-
+        var result =await client.ListFriendsAsync(session);
+ 
+    
         await socket.ConnectAsync(session);
         Debug.LogError("Socket connected.");
     }
@@ -64,6 +65,8 @@ public class FriendShip : MonoBehaviour
     private void SendFriendRequest()
     {
        client.AddFriendsAsync(session, Array.Empty<string>(),new string[]{friendNameText});
+       
+
     }
 
     private async void ListFriends()
@@ -73,6 +76,7 @@ public class FriendShip : MonoBehaviour
         foreach (var item in res.Friends)
         {
             Debug.LogError($"log: {item.User.Username}.....{item.UpdateTime}....{item.State}...{item.User.Online}");
+            
         }
         
         
