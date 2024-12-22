@@ -23,16 +23,19 @@ namespace Script
         private ISocket socket;
         private ISession session;
 
+        [SerializeField] private bool sendScores;
 
         private async Task<string> AuthMany()
         {
+           
             client = new Client(scheme, host, port, serverKey);
             socket = Nakama.Socket.From(client);
 
-            for (int i = 0; i < 175; i++)
+            for (int i = 0; i < 300; i++)
             {
-                session = await client.AuthenticateEmailAsync($"u{i}@yahoo.com", "123456789", $"u{i}");
-             //   if (Random.Range(1, 5) > 3)
+                session = await client.AuthenticateEmailAsync($"u24@yahoo.com", "123456789", $"u24");
+                if (!sendScores) continue;
+                if (Random.Range(1, 5) > 1)
                 {
                     var res = await client.RpcAsync(session, "match_result_test", "{}");
                     Debug.LogError(res.Payload);
@@ -63,8 +66,14 @@ namespace Script
         {
             foreach (var leaderboard in leaderboards)
             {
-                var data = await client.ListLeaderboardRecordsAsync(session, leaderboard, limit: 200);
-                Debug.Log("Leaderboard:"+leaderboard+":"+ JsonConvert.SerializeObject( data.Records));
+                var data = await client.ListLeaderboardRecordsAsync(session, leaderboard, limit: 1000);
+                Debug.Log("Leaderboard:"+leaderboard+":"+  data.Records.Count());
+
+                foreach (var item in data.Records)
+                {
+                    Debug.Log($"leaderboard:{leaderboard}:{item.Rank}|{item.Username}|{item.Score}");
+                }
+                
             }
             return "dddd";
         }
@@ -79,7 +88,13 @@ namespace Script
             {
                 var data = await client.ListLeaderboardRecordsAroundOwnerAsync(session, 
                     leaderboard, session.UserId, limit: 100);
-                Debug.Log("Leaderboard Around User:"+leaderboard+":"+ JsonConvert.SerializeObject( data.Records));
+                Debug.Log("Leaderboard Around User:"+leaderboard+":"+  data.Records.Count());
+                
+                foreach (var item in data.Records)
+                {
+                    Debug.Log($"around leaderboard:{leaderboard}:{item.Rank}|{item.Username}|{item.Score}");
+                }
+                
             }
 
             return "ddd";
@@ -94,8 +109,14 @@ namespace Script
             foreach (var leaderboard in leaderboards)
             {
                 var data = await client.ListLeaderboardRecordsAsync(session, 
-                    leaderboard,  limit: 200, expiry: long.Parse(des.Data));
-                Debug.Log("Past Leaderboard"+leaderboard+":"+ JsonConvert.SerializeObject( data.Records));
+                    leaderboard,  limit: 1000, expiry: long.Parse(des.Data));
+                Debug.Log("Past Leaderboard:"+leaderboard+":"+  data.Records.Count());
+                
+                foreach (var item in data.Records)
+                {
+                    Debug.Log($"past leaderboard:{leaderboard}:{item.Rank}|{item.Username}|{item.Score}");
+                }
+                
             }
 
             return "ddd";
