@@ -2,20 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Nakama;
 using UnityEngine;
 
 public class NakamaAutomaticMatch : MonoBehaviour
 {
+    [SerializeField] private float threshod;
+
     private string _emailText = "";
     private string _inputText = "";
     private string _rankText = "";
     private string _healthText = "";
     private string _regionText = "";
     private string _rankRangeText = "";
-private string _healthRangeText = "";
-    
+    private string _healthRangeText = "";
+
     private const string Scheme = "http";
     private const string Host = "116.203.192.124";
     private const int Port = 7350;
@@ -29,6 +32,12 @@ private string _healthRangeText = "";
     private string _matchId = "";
     private string _joinMatchId = "";
 
+    private bool _includeHealth;
+    private bool _strictHealth;
+    private bool _includeRegion;
+    private bool _strictRegion;
+    private bool _includeRank;
+    private bool _strictRank;
 
     void OnGUI()
     {
@@ -38,7 +47,14 @@ private string _healthRangeText = "";
         _healthText = GUILayout.TextField(_healthText, 25, GUILayout.Width(200));
         _regionText = GUILayout.TextField(_regionText, 25, GUILayout.Width(200));
         _rankRangeText = GUILayout.TextField(_rankRangeText, 25, GUILayout.Width(200));
-        _healthRangeText= GUILayout.TextField(_healthRangeText, 25, GUILayout.Width(200));
+        _healthRangeText = GUILayout.TextField(_healthRangeText, 25, GUILayout.Width(200));
+        _includeHealth = GUILayout.Toggle(_includeHealth, "Include Health");
+        _strictHealth = GUILayout.Toggle(_strictHealth, "Strict Health");
+        _includeRegion = GUILayout.Toggle(_includeRegion, "Include Region");
+        _strictRegion = GUILayout.Toggle(_strictRegion, "Strict Region");
+        _includeRank = GUILayout.Toggle(_includeRank, "Include Rank");
+        _strictRank = GUILayout.Toggle(_strictRank, "Strict Rank");
+
         GUILayout.Space(10);
 
 
@@ -103,6 +119,18 @@ private string _healthRangeText = "";
     {
         Debug.LogError(newMatch.MatchId);
         _match = await _socket.JoinMatchAsync(newMatch);
+
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.Append("on matched:");
+
+        foreach (var item in newMatch.Users)
+        {
+            builder.Append(item.Presence.Username).Append(Environment.NewLine);
+        }
+
+        Debug.LogError(builder.ToString());
     }
 
 
@@ -129,7 +157,7 @@ private string _healthRangeText = "";
             { { HealthKey, int.Parse(_healthText) }, { RankKey, int.Parse(_rankText) } };
         var stringDic = new Dictionary<string, string>() { { RegionKey, _regionText } };
 
-        var ticket = await _socket.AddMatchmakerAsync("*", 2, 2, stringDic, numDic);
+        var ticket = await _socket.AddMatchmakerAsync(CreateQuery(), 2, 2, stringDic, numDic);
 
         Debug.LogError($"ticket id:{ticket.Ticket}");
     }
@@ -137,13 +165,17 @@ private string _healthRangeText = "";
 
     private string CreateQuery()
     {
-        return null;
+        StringBuilder builder = new();
+
+
+        var result = builder.ToString();
+        if (result == string.Empty)
+            result = "*";
+        return result;
     }
-    
+
     private static List<string> _regions = new() { "asia", "eu", "africa" };
     private const string HealthKey = "health";
     private const string RankKey = "rank";
     private const string RegionKey = "region";
-
-
 }
