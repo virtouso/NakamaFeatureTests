@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using Nakama;
@@ -9,18 +7,15 @@ using UnityEngine;
 
 public class NakamaAutomaticMatch : MonoBehaviour
 {
-    [SerializeField] private float threshod;
-
     private string _emailText = "";
     private string _inputText = "";
     private string _rankText = "";
     private string _healthText = "";
     private string _regionText = "";
-    private string _rankRangeText = "";
-    private string _healthRangeText = "";
 
+    private  string _threshold="";
     private const string Scheme = "http";
-    private const string Host = "116.203.192.124";
+    private const string Host = "localhost";
     private const int Port = 7350;
     private const string ServerKey = "defaultkey";
 
@@ -39,21 +34,29 @@ public class NakamaAutomaticMatch : MonoBehaviour
     private bool _includeRank;
     private bool _strictRank;
 
+
     void OnGUI()
     {
+        GUILayout.Label("email");
         _emailText = GUILayout.TextField(_emailText, 25, GUILayout.Width(200));
+        GUILayout.Label("input");
         _inputText = GUILayout.TextField(_inputText, 25, GUILayout.Width(200));
+        GUILayout.Label("rank");
         _rankText = GUILayout.TextField(_rankText, 25, GUILayout.Width(200));
+        GUILayout.Label("health");
         _healthText = GUILayout.TextField(_healthText, 25, GUILayout.Width(200));
+        GUILayout.Label("region");
         _regionText = GUILayout.TextField(_regionText, 25, GUILayout.Width(200));
-        _rankRangeText = GUILayout.TextField(_rankRangeText, 25, GUILayout.Width(200));
-        _healthRangeText = GUILayout.TextField(_healthRangeText, 25, GUILayout.Width(200));
+        GUILayout.Label("threshold");
+        _threshold = GUILayout.TextField(_threshold, 25, GUILayout.Width(200));
+
         _includeHealth = GUILayout.Toggle(_includeHealth, "Include Health");
         _strictHealth = GUILayout.Toggle(_strictHealth, "Strict Health");
         _includeRegion = GUILayout.Toggle(_includeRegion, "Include Region");
         _strictRegion = GUILayout.Toggle(_strictRegion, "Strict Region");
         _includeRank = GUILayout.Toggle(_includeRank, "Include Rank");
         _strictRank = GUILayout.Toggle(_strictRank, "Strict Rank");
+
 
         GUILayout.Space(10);
 
@@ -157,6 +160,9 @@ public class NakamaAutomaticMatch : MonoBehaviour
             { { HealthKey, int.Parse(_healthText) }, { RankKey, int.Parse(_rankText) } };
         var stringDic = new Dictionary<string, string>() { { RegionKey, _regionText } };
 
+        var intThreshold = int.Parse(_threshold);
+        
+        
         var ticket = await _socket.AddMatchmakerAsync(CreateQuery(), 2, 2, stringDic, numDic);
 
         Debug.LogError($"ticket id:{ticket.Ticket}");
@@ -167,10 +173,52 @@ public class NakamaAutomaticMatch : MonoBehaviour
     {
         StringBuilder builder = new();
 
+        int threshold = int.Parse(_threshold);
+        int currentHealth = int.Parse(_healthText);
+        int currentRank = int.Parse(_rankText);
+        
+        if (_includeRegion)
+        {
+            if (!_regions.Contains(_regionText))
+                throw new Exception("region not exist");
+
+            if (_strictRegion)
+                builder.Append("+");
+            builder.Append($"properties.{RegionKey}:{_regionText}");
+            builder.Append(" ");
+        }
+
+        if (_includeHealth)
+        {
+            if (_strictHealth)
+                builder.Append("+");
+            builder.Append($"properties.{HealthKey}:<={currentHealth+threshold}");
+            builder.Append(" ");
+            if (_strictHealth)
+                builder.Append("+");
+            builder.Append($"properties.{HealthKey}:>={currentHealth-threshold}");
+            builder.Append(" ");
+            
+        }
+
+        if (_includeRank)
+        {
+            if (_strictRank)
+                builder.Append("+");
+            builder.Append($"properties.{RankKey}:<={currentRank+threshold}");
+            builder.Append(" ");
+            if (_strictHealth)
+                builder.Append("+");
+            builder.Append($"properties.{RankKey}:>={currentRank-threshold}");
+            builder.Append(" ");
+        }
+
 
         var result = builder.ToString();
         if (result == string.Empty)
             result = "*";
+        
+        Debug.LogError($"query is: {result.ToString()}");
         return result;
     }
 
