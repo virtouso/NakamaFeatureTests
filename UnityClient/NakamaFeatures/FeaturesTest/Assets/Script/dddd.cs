@@ -22,7 +22,7 @@ namespace Script
     }
 
 
-    class Card
+    class PlayerCard
     {
         public string CardId { get; set; }
 
@@ -33,11 +33,11 @@ namespace Script
     class CardManager
     {
         public List<CardReference> CardRefs = new List<CardReference>();
-        public List<Card> Cards { get; set; } = new List<Card>();
+        public List<PlayerCard> Cards { get; set; } = new List<PlayerCard>();
 
         public void Buy(string cardId)
         {
-            Cards.Add(new Card { CardId = cardId, });
+            Cards.Add(new PlayerCard { CardId = cardId, });
         }
 
         public void Sell(string cardId)
@@ -53,18 +53,18 @@ namespace Script
             var cardTypeInCurrentDeck = Cards.Where(x => x.CardId == cardId)
                 .Where(x => x.Decks.FirstOrDefault(y => y.Hero == heroId && y.Slot == slot) != null).ToList();
 
-            if (cardTypeInCurrentDeck.Count >= cardRef.MaxInDeck)
-            {
-                throw new Exception("Deck is full for this cards");
-                return;
-            }
+            // if (cardTypeInCurrentDeck.Count >= cardRef.MaxInDeck)
+            // {
+            //     throw new Exception("Deck is full for this cards");
+            //     return;
+            // }
 
             cards.First(x =>
                     x.CardId == cardId && x.Decks.FirstOrDefault(y => y.Hero == heroId && y.Slot == slot) == null).Decks
                 .Add(new HeroSlot() { Hero = heroId, Slot = slot });
         }
 
-        public List<Card> GetDeckCards(string heroId, int slot)
+        public List<PlayerCard> GetDeckCards(string heroId, int slot)
         {
             return Cards.Where(x => x.Decks.FirstOrDefault(y => y.Hero == heroId && y.Slot == slot) != null).ToList();
         }
