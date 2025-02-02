@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7281c78b56d9cb6448f3d05db5a72469, type: 3}
+  m_Name: CardConfig 2
+  m_EditorClassIdentifier: 
+  <Id>k__BackingField: c3
+  <DisplayName>k__BackingField: gholi
+  <Health>k__BackingField: 1
+  <Mana>k__BackingField: 1
+  <Marketable>k__BackingField: 0
+  <Rarity>k__BackingField: common
+  <Attack>k__BackingField: 1
+  <Story>k__BackingField: dasdasdas
+  <BuyPrice>k__BackingField:
+  - <CurrencyId>k__BackingField: stone
+    <Amount>k__BackingField: 4
+  - <CurrencyId>k__BackingField: elixir
+    <Amount>k__BackingField: 4
+  <SellPrice>k__BackingField:
+  - <CurrencyId>k__BackingField: stone
+    <Amount>k__BackingField: 1
+  - <CurrencyId>k__BackingField: elixir
+    <Amount>k__BackingField: 1
