@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Nakama;
 using Newtonsoft.Json;
 using Script.config;
@@ -26,7 +28,7 @@ public class NakamaCamp : MonoBehaviour
     private string groupNameText = "";
     private string userIdText = "";
 
-    private async void Authenticate()
+    private async Task Authenticate()
     {
         client = new Client(scheme, host, port, serverKey);
         socket = Nakama.Socket.From(client);
@@ -79,10 +81,90 @@ public class NakamaCamp : MonoBehaviour
         }
     }
 
-
-    private void Start()
+    private async Task GetPlayerCards()
     {
-        Authenticate();
+        var result = await client.RpcAsync(session, "camp/get_player_cards");
+        Debug.LogError(result.Payload);
+    }
+
+    private async Task<Camp> GetPlayerCampAllData()
+    {
+        var result = await client.RpcAsync(session, "camp/get_player_camp_all_data");
+        Debug.LogError(result.Payload);
+        var des = JsonConvert.DeserializeObject<Camp>(result.Payload);
+        return des;
+    }
+
+
+    private async Task GetPlayerDeck()
+    {
+        var result = await client.RpcAsync(session, "camp/get_player_deck", JsonConvert.SerializeObject(new GetPlayerDeckRequest
+        {
+            DeckIndex = 0,
+            HeroID = "hunterdsds"
+        }));
+        Debug.LogError(result.Payload);
+        Debug.LogError(result.HttpKey);
+        Debug.LogError(result.Id);
+    }
+
+
+    private async Task AddOrUpdatePlayerData(Camp camp)
+    {
+        var req = new Dictionary<string, CardRequest>();
+
+        var dddd = camp.AllCards.Take(2).ToList();
+        dddd.Add(camp.AllCards.First(x=>x.Value.CardId=="c6"));
+        foreach (var item in dddd)
+        {
+            req.Add(item.Key, new CardRequest { CardId = item.Value.CardId, CardGuid = item.Value.Guid });
+        }
+
+        //   req.ElementAt(0).Value.CardId = "hunterdsds";
+
+        var data = new AddOrUpdatePlayerDeckRequest
+        {
+            DeckIndex = 5,
+            HeroID = "hunter",
+            RequestDeckCards = req
+        };
+
+        var result = await client.RpcAsync(session, "camp/add_or_update_player_deck", JsonConvert.SerializeObject(data));
+        Debug.LogError(result.Payload);
+    }
+
+    private async Task BuyCard()
+    {
+        var result = await client.RpcAsync(session, "camp/buy_card", JsonConvert.SerializeObject(new BuyCardRequest { CardId = "c6" }));
+        Debug.LogError(result.Payload);
+    }
+
+    private async Task SellCard()
+    {
+        var result = await client.RpcAsync(session, "camp/sell_card", JsonConvert.SerializeObject(new SellCardRequest() { CardGuid = "ca8e4258-ba9e-4c41-9f2b-61aca7130203" }));
+        Debug.LogError(result.Payload);
+    }
+
+    private async Task Start()
+    {
+        await Authenticate();
+       
+        await SellCard();
+        var camp = await GetPlayerCampAllData();
+        //  await AddOrUpdatePlayerData(camp);
+
+        //   await SellCard();
+
+        //  await BuyCard();
+        //  await GetPlayerCampAllData();
+        //  var account= await client.GetAccountAsync(session);
+        //  Debug.LogError(account.Wallet);
+
+        //   UpdateServerConfigs();
+        //   await GetPlayerCards();
+        //   var camp = await GetPlayerCampAllData();
+        //   await AddOrUpdatePlayerData(camp);
+        //     await GetPlayerDeck();
     }
 
     private void Update()
@@ -90,4 +172,58 @@ public class NakamaCamp : MonoBehaviour
         if (!Input.GetKeyDown(KeyCode.Space)) return;
         UpdateServerConfigs();
     }
+}
+
+class GetPlayerDeckRequest
+{
+    [JsonProperty("hero_id")] public string HeroID { get; set; }
+    [JsonProperty("deck_index")] public int DeckIndex { get; set; }
+}
+
+class AddOrUpdatePlayerDeckRequest
+{
+    [JsonProperty("hero_id")] public string HeroID { get; set; }
+    [JsonProperty("deck_index")] public int DeckIndex { get; set; }
+    [JsonProperty("request_deck_cards")] public Dictionary<string, CardRequest> RequestDeckCards { get; set; }
+}
+
+class CardRequest
+{
+    [JsonProperty("card_guid")] public string CardGuid { get; set; }
+    [JsonProperty("card_id")] public string CardId { get; set; }
+}
+
+public partial class Camp
+{
+    [JsonProperty("AllCards")] public Dictionary<string, Card> AllCards { get; set; }
+
+    [JsonProperty("heroesDecks")] public HeroesDecks HeroesDecks { get; set; }
+}
+
+public partial class Card
+{
+    [JsonProperty("guid")] public string Guid { get; set; }
+
+    [JsonProperty("card_id")] public string CardId { get; set; }
+}
+
+public partial class HeroesDecks
+{
+    [JsonProperty("hunter")] public Hunter[] Hunter { get; set; }
+}
+
+public partial class Hunter
+{
+    [JsonProperty("cards")] public Dictionary<string, Card> Cards { get; set; }
+}
+
+
+public class BuyCardRequest
+{
+    [JsonProperty("card_id")] public string CardId { get; set; }
+}
+
+public class SellCardRequest
+{
+    [JsonProperty("card_guid")] public string CardGuid { get; set; }
 }

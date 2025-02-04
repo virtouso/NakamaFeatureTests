@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: CardsList
   m_EditorClassIdentifier: 
   <Cards>k__BackingField:
+  - {fileID: 11400000, guid: 49c0709fba73be84891a70cb58ec1dd0, type: 2}
   - {fileID: 11400000, guid: 751ff1999f28b8a47b0cd0d29732ec13, type: 2}
-  - {fileID: 11400000, guid: 53052375f098f644fb68099e8601cb9a, type: 2}
-  - {fileID: 11400000, guid: 232daa53b0c26de4f84708cb4a6a7778, type: 2}
-  - {fileID: 11400000, guid: b06b2e4da9877954eb758ceff1f339d6, type: 2}
-  - {fileID: 11400000, guid: 794b22e093d1f19409cd606a405a5cb6, type: 2}
+  - {fileID: 11400000, guid: 8ceee2ae33b81b3479d06c751865eaa1, type: 2}
+  - {fileID: 11400000, guid: 4bb3f21e5f8021640a3ebdb5c3a4b974, type: 2}
+  - {fileID: 11400000, guid: 9e5b72e34f54ec94192465a445713931, type: 2}
+  - {fileID: 11400000, guid: 8b9a7bf885117884abefb745e2eac446, type: 2}
+  - {fileID: 11400000, guid: 6ae32fa32e795d849a098fce480cc664, type: 2}
