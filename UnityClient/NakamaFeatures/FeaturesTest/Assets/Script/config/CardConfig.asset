@@ -17,7 +17,8 @@ MonoBehaviour:
   <Health>k__BackingField: 1
   <Mana>k__BackingField: 1
   <Marketable>k__BackingField: 0
-  <Rarity>k__BackingField: common
+  <Rarity>k__BackingField: free
+  <OpenPackChance>k__BackingField: 100
   <Attack>k__BackingField: 1
   <Story>k__BackingField: dasdasdas
   <BuyPrice>k__BackingField:

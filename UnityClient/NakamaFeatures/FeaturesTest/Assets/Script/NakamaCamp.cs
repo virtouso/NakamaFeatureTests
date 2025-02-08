@@ -41,9 +41,11 @@ public class NakamaCamp : MonoBehaviour
         Debug.LogError("Socket connected.");
     }
 
-
+[ContextMenu("UpdateCardsCongif")]
     private async void UpdateServerConfigs()
     {
+        if (session == null)await 
+            Authenticate();
         foreach (var item in cardsList.Cards)
         {
             var req = new SendCardConfigRequest
@@ -61,11 +63,12 @@ public class NakamaCamp : MonoBehaviour
                     BuyPrice = ToDict(item.BuyPrice),
                     DisplayName = item.DisplayName,
                     SellPrice = ToDict(item.SellPrice),
-                    CardId = item.Id
+                    CardId = item.Id,
+                    OpenPackChance = item.OpenPackChance,
                 }
             };
             var data = JsonConvert.SerializeObject(req);
-            var res = await client.RpcAsync(session, "send_card_config", data);
+            var res = await client.RpcAsync(session, "admin/cards/send_card_config", data);
             Debug.Log(res.Payload);
         }
 
@@ -149,8 +152,8 @@ public class NakamaCamp : MonoBehaviour
     {
         await Authenticate();
        
-        await SellCard();
-        var camp = await GetPlayerCampAllData();
+      //  await SellCard();
+      //  var camp = await GetPlayerCampAllData();
         //  await AddOrUpdatePlayerData(camp);
 
         //   await SellCard();

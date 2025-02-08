@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Script
 {
-    public class NakamaAccount : MonoBehaviour
+    public class NakamaOpenPack: MonoBehaviour
     {
         private const string scheme = "http";
         private const string host = "127.0.0.1";
@@ -36,34 +36,28 @@ namespace Script
             Debug.LogError("Socket connected.");
         }
 
-        private async Task UpdateMeta()
-        {
 
-            var obj = new {username="changiz_the_great", bio="my name is changiz the bst" };
+
+        private async Task GetPlayerPacksCount()
+        {
             
-            var result = await client.RpcAsync(session, "account/update_meta",JsonConvert.SerializeObject(obj));
+            var result = await client.RpcAsync(session, "open_pack/get_player_packs_counts");
             Debug.Log(result.Payload);
         }
 
 
-        private async Task GetMeta()
+        private async Task OpenPack()
         {
-            var result = await client.RpcAsync(session, "account/get_meta");
-            Debug.Log(result.Payload);
-        }
-        
-        private async Task GetStats()
-        {
-            var result = await client.RpcAsync(session, "account/get_player_stats");
+            var obj = new { pack_type = "common" };
+            var result = await client.RpcAsync(session, "open_pack/open_pack",JsonConvert.SerializeObject(obj));
             Debug.Log(result.Payload);
         }
 
-
-        
         private async void Start()
         {
             await Authenticate();
-            await UpdateMeta();
+            await GetPlayerPacksCount();
+            await OpenPack();
         }
     }
 }

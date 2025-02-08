@@ -13,6 +13,7 @@ namespace Script.config
         [field: SerializeField] public int Mana { get; private set; }
         [field: SerializeField] public bool Marketable { get; private set; }
         [field: SerializeField] public string Rarity { get; private set; }
+        [field: SerializeField] public int OpenPackChance { get; private set; }
         [field: SerializeField] public int Attack { get; private set; }
         [field: SerializeField] public string Story { get; private set; }
         [field: SerializeField] public List<CurrencyData> BuyPrice { get; private set; }

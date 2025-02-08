@@ -18,6 +18,7 @@ MonoBehaviour:
   <Mana>k__BackingField: 1
   <Marketable>k__BackingField: 1
   <Rarity>k__BackingField: legendary
+  <OpenPackChance>k__BackingField: 100
   <Attack>k__BackingField: 1
   <Story>k__BackingField: dasdasdas
   <BuyPrice>k__BackingField:

@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Nakama;
 using Newtonsoft.Json;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Script
 {
-    public class NakamaAccount : MonoBehaviour
+    public class NakamaAdmin: MonoBehaviour
     {
         private const string scheme = "http";
         private const string host = "127.0.0.1";
@@ -36,34 +38,43 @@ namespace Script
             Debug.LogError("Socket connected.");
         }
 
-        private async Task UpdateMeta()
-        {
 
-            var obj = new {username="changiz_the_great", bio="my name is changiz the bst" };
+        private async Task  GivePlayerPack()
+        {
+            var obj = new {player_id=session.UserId, common=10,legendary=9 };
+            var result = await client.RpcAsync(session, "admin/card_pack/give_player_pack",JsonConvert.SerializeObject(obj));
+            Debug.Log(result.Payload);
+        }
+        
+        private async Task  RemovePack()
+        {
+            var obj = new {pack_id=""};
+            var result = await client.RpcAsync(session, "admin/card_pack/remove_pack",JsonConvert.SerializeObject(obj));
+            Debug.Log(result.Payload);
+        }
+
+        private async Task  AddPack()
+        {
+            var obj = new {pack_id="1011", rarities=new  List<string>{"common","legendary","common","epic"}, chance= 10, rarity_type= "common" };
+            var result = await client.RpcAsync(session, "admin/card_pack/add_pack",JsonConvert.SerializeObject(obj));
+            Debug.Log(result.Payload);
             
-            var result = await client.RpcAsync(session, "account/update_meta",JsonConvert.SerializeObject(obj));
-            Debug.Log(result.Payload);
         }
 
-
-        private async Task GetMeta()
+        private async Task ListPacks()
         {
-            var result = await client.RpcAsync(session, "account/get_meta");
-            Debug.Log(result.Payload);
-        }
-        
-        private async Task GetStats()
-        {
-            var result = await client.RpcAsync(session, "account/get_player_stats");
+            var result = await client.RpcAsync(session, "admin/card_pack/list_packs");
             Debug.Log(result.Payload);
         }
 
-
-        
         private async void Start()
         {
-            await Authenticate();
-            await UpdateMeta();
+          await  Authenticate();
+
+       //   await AddPack();
+       //   await RemovePack();
+          await GivePlayerPack();
+       //await ListPacks();
         }
     }
 }

@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7281c78b56d9cb6448f3d05db5a72469, type: 3}
-  m_Name: CardConfig 1
+  m_Name: CardConfig 7
   m_EditorClassIdentifier: 
-  <Id>k__BackingField: c2
-  <DisplayName>k__BackingField: mammad
+  <Id>k__BackingField: c8
+  <DisplayName>k__BackingField: noobdsds
   <Health>k__BackingField: 1
   <Mana>k__BackingField: 1
-  <Marketable>k__BackingField: 0
-  <Rarity>k__BackingField: free
+  <Marketable>k__BackingField: 1
+  <Rarity>k__BackingField: epic
   <OpenPackChance>k__BackingField: 100
   <Attack>k__BackingField: 1
   <Story>k__BackingField: dasdasdas
