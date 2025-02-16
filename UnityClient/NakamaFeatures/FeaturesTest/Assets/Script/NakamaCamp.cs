@@ -69,6 +69,7 @@ public class NakamaCamp : MonoBehaviour
             };
             var data = JsonConvert.SerializeObject(req);
             var res = await client.RpcAsync(session, "admin/cards/send_card_config", data);
+            
             Debug.Log(res.Payload);
         }
 
@@ -88,12 +89,16 @@ public class NakamaCamp : MonoBehaviour
     {
         var result = await client.RpcAsync(session, "camp/get_player_cards");
         Debug.LogError(result.Payload);
+        Debug.LogError(result.HttpKey);
     }
 
     private async Task<Camp> GetPlayerCampAllData()
     {
         var result = await client.RpcAsync(session, "camp/get_player_camp_all_data");
         Debug.LogError(result.Payload);
+        
+ 
+        
         var des = JsonConvert.DeserializeObject<Camp>(result.Payload);
         return des;
     }
