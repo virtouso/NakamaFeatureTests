@@ -15,41 +15,44 @@ namespace Script.Shop
     {
         public string Id { get; set; }
         public List<string> Assets { get; set; }
-        public Dictionary<string,int> Resources { get; set; }
-        
+        public Dictionary<string, int> Resources { get; set; } = new();
     }
-    
+
     public abstract class BaseShopItem
     {
         public string Id { get; set; }
         public int MarketPriority { get; set; }
-        
+
         public bool Enabled { get; set; }
         public string ShopPackId { get; set; }
+
         public string Title { get; set; }
-        public int MaxPermittedOnPlayerAccount { get; set; }
-        public Dictionary<string, int> ExtraFreeResources { get; set; }
+
+        //  public int MaxPermittedOnPlayerAccount { get; set; }
         public string Description { get; set; }
+        public bool IsSpecialOffer { get; set; }
+        public List<string> ShowPlaces { get; set; } = new();
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
-
-
 
     public class ExtraFree
     {
         public string Id { get; set; }
         public string Title { get; set; }
         public List<string> Assets { get; set; }
-        public Dictionary<string, int> ExtraFreeResources { get; set; }
+        public Dictionary<string, int> ExtraFreeResources { get; set; } = new();
     }
 
-    public class VirtualCurrencyShopItem
+    public class VirtualCurrencyShopItem : BaseShopItem
     {
-        public Dictionary<string, long> Prices = new ();
+        public Dictionary<string, long> Prices = new();
     }
 
-    public class RealCurrencyShopItem
+    public class RealCurrencyShopItem : BaseShopItem
     {
         public long Price { get; set; }
+        //   public Dictionary<string, long> Prices = new();// currency -> price.
     }
 
 
@@ -64,8 +67,11 @@ namespace Script.Shop
 
     public class DiscountTimeLimited : Discount
     {
+        public string Id { get; set; }
+        public bool Enabled { get; set; }
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
+        public int FinalPrice { get; set; }
     }
 
 
@@ -75,6 +81,16 @@ namespace Script.Shop
         public string Count { get; set; }
         public bool Enabled { get; set; }
     }
+
+    public class DiscountCountAndTimeLimited
+    {
+        public string Id { get; set; }
+        public string Count { get; set; }
+        public bool Enabled { get; set; }
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+    }
+
 
     public class DiscountCountLimitedState
     {
@@ -91,30 +107,57 @@ namespace Script.Shop
         public abstract bool PlayerCanSee(PlayerProgress progress);
     }
 
-    class AbTest
+    public class AbTest
     {
         public string Id { get; set; }
         public string TestId { get; set; }
         public bool Enabled { get; set; }
-        
     }
 
-    public class Extra
-    {
-        public string Id { get; set; }
-        public bool Enabled { get; set; }
-    }
 
     public class StoreItemAggregate
     {
         public string Id { get; set; }
+        public PaymentMethod PaymentMethod { get; set; }
+        public DiscountType DiscountType { get; set; }
+        public ShopPack ShopPack { get; set; }
+        public VirtualCurrencyShopItem VirtualCurrencyShopItem { get; set; }
+        public RealCurrencyShopItem RealCurrencyShopItem { get; set; }
+        public DiscountTimeLimited DiscountTimeLimited { get; set; }
+        public DiscountCountLimited DiscountCountLimited { get; set; }
+        public ExtraFree ExtraFree { get; set; }
+        public List<string> Conditions { get; set; } = new();
+        public AbTest AbTest { get; set; }
+        
+        
     }
 
 
-    static class Consts
+    public static class PurchaseStateConsts
     {
-        public static string TransactionStatePurchased = "purchased";
-        public static string TransactionStateApplied = "applied";
-        public static string TransactionStateConsumed = "consumed";
+        public const string TransactionStatePurchased = "purchased";
+        public const string TransactionStateApplied = "applied";
+        public const string TransactionStateConsumed = "consumed";
+    }
+
+
+    public static class AppPlacesConsts
+    {
+        public const string StartPopUp = "start_popup";
+        public const string Store = "store";
+    }
+
+
+    public enum PaymentMethod
+    {
+        RealCurrency,
+        VirtualCurrency
+    }
+
+    public enum DiscountType
+    {
+        None,
+        TimeLimited,
+        CountLimited
     }
 }
