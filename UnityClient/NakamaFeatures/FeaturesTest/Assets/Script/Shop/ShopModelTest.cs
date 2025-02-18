@@ -7,13 +7,15 @@ namespace Script.Shop
     public class Asset
     {
         public string Id { get; set; }
-        public string DisplayName { get; set; }
-        public bool Enabled { get; set; }
+        //   public string DisplayName { get; set; }
+        // public bool Enabled { get; set; }
     }
 
     public class ShopPack
     {
         public string Id { get; set; }
+
+        //   public bool Enabled { get; set; }
         public List<string> Assets { get; set; }
         public Dictionary<string, int> Resources { get; set; } = new();
     }
@@ -31,9 +33,11 @@ namespace Script.Shop
         //  public int MaxPermittedOnPlayerAccount { get; set; }
         public string Description { get; set; }
         public bool IsSpecialOffer { get; set; }
-        public List<string> ShowPlaces { get; set; } = new();
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+
+        public List<string> Tags { get; set; } = new();
+        //   public List<string> CategoryTags { get; set; } = new();
+        // public DateTime StartTime { get; set; }
+        // public DateTime EndTime { get; set; }
     }
 
     public class ExtraFree
@@ -63,14 +67,16 @@ namespace Script.Shop
         public int FinalPrice { get; set; }
         public bool Enabled { get; set; }
         public string Title { get; set; }
+        public string Description { get; set; }
     }
 
     public class DiscountTimeLimited : Discount
     {
         public string Id { get; set; }
-        public bool Enabled { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+
+        //    public bool Enabled { get; set; }
+        //   public DateTime StartTime { get; set; }
+        //   public DateTime EndTime { get; set; }
         public int FinalPrice { get; set; }
     }
 
@@ -78,17 +84,19 @@ namespace Script.Shop
     public class DiscountCountLimited : Discount
     {
         public string Id { get; set; }
+
         public string Count { get; set; }
-        public bool Enabled { get; set; }
+        //    public bool Enabled { get; set; }
     }
 
-    public class DiscountCountAndTimeLimited
+    public class DiscountCountAndTimeLimited : Discount
     {
         public string Id { get; set; }
+
         public string Count { get; set; }
-        public bool Enabled { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        //     public bool Enabled { get; set; }
+        //     public DateTime StartTime { get; set; }
+        //     public DateTime EndTime { get; set; }
     }
 
 
@@ -107,11 +115,14 @@ namespace Script.Shop
         public abstract bool PlayerCanSee(PlayerProgress progress);
     }
 
+
     public class AbTest
     {
         public string Id { get; set; }
         public string TestId { get; set; }
-        public bool Enabled { get; set; }
+
+        public string GroupId { get; set; }
+        //   public bool Enabled { get; set; }
     }
 
 
@@ -127,15 +138,17 @@ namespace Script.Shop
         public DiscountCountLimited DiscountCountLimited { get; set; }
         public ExtraFree ExtraFree { get; set; }
         public List<string> Conditions { get; set; } = new();
+        public bool Enabled { get; set; }
         public AbTest AbTest { get; set; }
-        
-        
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
     }
 
 
     public static class PurchaseStateConsts
     {
         public const string TransactionStatePurchased = "purchased";
+        public const string TransactionStateValidated = "validated";
         public const string TransactionStateApplied = "applied";
         public const string TransactionStateConsumed = "consumed";
     }
@@ -158,6 +171,7 @@ namespace Script.Shop
     {
         None,
         TimeLimited,
-        CountLimited
+        CountLimited,
+        Both
     }
 }

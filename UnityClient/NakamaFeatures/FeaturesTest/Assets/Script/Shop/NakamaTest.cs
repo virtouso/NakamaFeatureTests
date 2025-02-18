@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Nakama;
 using Nakama.Console;
+using Newtonsoft.Json;
 using UnityEngine;
 using ApiResponseException = Nakama.ApiResponseException;
 
@@ -27,6 +28,8 @@ namespace Script.Shop
             client = new Client(scheme, host, port, serverKey);
             socket = Nakama.Socket.From(client);
 
+            
+            
             // Authenticate with device ID
             session = await client.AuthenticateEmailAsync("changiz@yahoo.com", "123456789", emailText.Split('@')[0]);
             Debug.LogError($"Authenticated: {session.Username}****{session.UserId}");
@@ -34,45 +37,29 @@ namespace Script.Shop
             await socket.ConnectAsync(session);
             Debug.LogError("Socket connected.");
         }
-
-
-        public async Task TestAll()
-        {
-            var res = await client.RpcAsync(session, "test/test_success");
-            Debug.Log(res.Payload);
-
-
-            try
-            {
-                res = await client.RpcAsync(session, "test/test_bad_request");
-                Debug.Log(res.Payload);
-            }
-            catch (ApiResponseException e)
-            {
-               Debug.Log(e.StatusCode.ToString() + e.GrpcStatusCode.ToString()+ e.Message);
-            }
-
-
-            try
-            {
-                res = await client.RpcAsync(session, "test/test_internal_error");
-                Debug.Log(res.Payload);
-            }
-            catch (ApiResponseException e)
-            {
-                Debug.Log(e.StatusCode.ToString() + e.GrpcStatusCode.ToString() + e.Message);
-            }
-            catch (Exception e)
-            {
-                Debug.Log(e);
-            }
-        }
-
+        
+        
+        
+        
+        
 
         private async void Start()
         {
             await Authenticate();
-            await TestAll();
+           // await TestAll();
         }
+
+
+  public      class Response<T>
+        {
+            public T Payload { get; set; }
+            public string message { get; set; }
+            public int StatusCode { get; set; }
+            public string Code { get; set; }
+        }
+        
+        
+        
+        
     }
 }
