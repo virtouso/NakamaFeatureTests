@@ -32,7 +32,7 @@ namespace Script.Shop
 
         //  public int MaxPermittedOnPlayerAccount { get; set; }
         public string Description { get; set; }
-        public bool IsSpecialOffer { get; set; }
+    ///    public bool IsSpecialOffer { get; set; }
 
         public List<string> Tags { get; set; } = new();
         //   public List<string> CategoryTags { get; set; } = new();
