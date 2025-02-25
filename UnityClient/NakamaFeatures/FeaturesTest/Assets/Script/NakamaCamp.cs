@@ -34,7 +34,7 @@ public class NakamaCamp : MonoBehaviour
         socket = Nakama.Socket.From(client);
 
         // Authenticate with device ID
-        session = await client.AuthenticateEmailAsync("changiz@yahoo.com", "123456789", emailText.Split('@')[0]);
+        session = await client.AuthenticateEmailAsync("changizz@yahoo.com", "123456789", emailText.Split('@')[0]);
         Debug.LogError($"Authenticated: {session.Username}****{session.UserId}");
 
         await socket.ConnectAsync(session);
@@ -104,6 +104,18 @@ public class NakamaCamp : MonoBehaviour
     }
 
 
+    
+    private async Task<Camp> GetPlayerAllHeroes()
+    {
+        var result = await client.RpcAsync(session, "camp/get_player_heroes");
+        Debug.LogError(result.Payload);
+        
+        var des = JsonConvert.DeserializeObject<Camp>(result.Payload);
+        return des;
+    }
+    
+    
+    
     private async Task GetPlayerDeck()
     {
         var result = await client.RpcAsync(session, "camp/get_player_deck", JsonConvert.SerializeObject(new GetPlayerDeckRequest
@@ -156,9 +168,10 @@ public class NakamaCamp : MonoBehaviour
     private async Task Start()
     {
         await Authenticate();
-       
-      //  await SellCard();
-      //  var camp = await GetPlayerCampAllData();
+        await GetPlayerCampAllData();
+      //  await GetPlayerAllHeroes();
+        //  await SellCard();
+        //  var camp = await GetPlayerCampAllData();
         //  await AddOrUpdatePlayerData(camp);
 
         //   await SellCard();
@@ -201,12 +214,12 @@ class CardRequest
     [JsonProperty("card_id")] public string CardId { get; set; }
 }
 
-public partial class Camp
-{
-    [JsonProperty("AllCards")] public Dictionary<string, Card> AllCards { get; set; }
-
-    [JsonProperty("heroesDecks")] public HeroesDecks HeroesDecks { get; set; }
-}
+// public partial class Camp
+// {
+//     [JsonProperty("AllCards")] public Dictionary<string, Card> AllCards { get; set; }
+//
+//     [JsonProperty("heroesDecks")] public HeroesDecks HeroesDecks { get; set; }
+// }
 
 public partial class Card
 {
@@ -217,13 +230,16 @@ public partial class Card
 
 public partial class HeroesDecks
 {
-    [JsonProperty("hunter")] public Hunter[] Hunter { get; set; }
+  //  [JsonProperty("hunter")] public Hunter[] Hunter { get; set; }
+
+  private Dictionary<string, Dictionary<string,Card>> Cards { get; set; }
+    
 }
 
-public partial class Hunter
-{
-    [JsonProperty("cards")] public Dictionary<string, Card> Cards { get; set; }
-}
+// public partial class Hunter
+// {
+//     [JsonProperty("cards")] public Dictionary<string, Card> Cards { get; set; }
+// }
 
 
 public class BuyCardRequest
@@ -234,4 +250,27 @@ public class BuyCardRequest
 public class SellCardRequest
 {
     [JsonProperty("card_guid")] public string CardGuid { get; set; }
+}
+
+
+public class Camp
+{
+    public Dictionary<string, PlayerCardData> AllCards { get; set; } = new();
+    
+    [JsonProperty("heroesDecks")]
+    public Dictionary<string, List<PlayerHeroDeck>> HeroesDecks { get; set; } = new();
+}
+
+public class PlayerCardData
+{
+    [JsonProperty("guid")]
+    public string Guid { get; set; }
+    
+    [JsonProperty("card_id")]
+    public string CardId { get; set; }
+}
+
+public class PlayerHeroDeck
+{
+    [JsonProperty("cards")] public Dictionary<string, PlayerCardData> Cards { get; set; }
 }
