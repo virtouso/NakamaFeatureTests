@@ -16,7 +16,7 @@ public class NakamaCamp : MonoBehaviour
 
 
     private const string scheme = "http";
-    private const string host = "127.0.0.1";
+    private const string host = "116.203.192.124";
     private const int port = 7350;
     private const string serverKey = "defaultkey";
 
@@ -41,7 +41,7 @@ public class NakamaCamp : MonoBehaviour
         Debug.LogError("Socket connected.");
     }
 
-[ContextMenu("UpdateCardsCongif")]
+[ContextMenu("UpdateCardsConfig")]
     private async void UpdateServerConfigs()
     {
         if (session == null)await 
@@ -104,6 +104,17 @@ public class NakamaCamp : MonoBehaviour
     }
 
 
+    public async Task GetPlayerCampConfigs()
+    {
+        var result = await client.RpcAsync(session, "camp/get_camp_configs");
+        Debug.LogError(result.Payload);
+        
+ 
+        
+        var des = JsonConvert.DeserializeObject<Camp>(result.Payload);
+    //    return des;
+    }
+    
     
     private async Task<Camp> GetPlayerAllHeroes()
     {
@@ -168,6 +179,7 @@ public class NakamaCamp : MonoBehaviour
     private async Task Start()
     {
         await Authenticate();
+        await GetPlayerCampConfigs();
         await GetPlayerCampAllData();
       //  await GetPlayerAllHeroes();
         //  await SellCard();
