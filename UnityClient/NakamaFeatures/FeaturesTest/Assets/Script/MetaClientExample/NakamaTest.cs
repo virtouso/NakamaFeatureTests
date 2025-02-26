@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using Nakama;
-using Nakama.Console;
-using Newtonsoft.Json;
 using UnityEngine;
 using ApiResponseException = Nakama.ApiResponseException;
 
-namespace Script.Shop
+namespace Script.MetaClientExample
 {
     public class NakamaTest : MonoBehaviour
     {
