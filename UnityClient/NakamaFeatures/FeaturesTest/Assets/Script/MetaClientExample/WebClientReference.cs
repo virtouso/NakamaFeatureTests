@@ -79,7 +79,11 @@ namespace Script.MetaClientExample
 
             return result;
         }
-        
+
+
+
+
+  
         
 
         [Serializable]
@@ -129,6 +133,31 @@ namespace Script.MetaClientExample
             [JsonProperty("secondary_raw_payload")] public string SecondaryRawPayload { get; set; }
          
         }
+
+        
+ 
+
+
+
+
+
+        void Start()
+        {
+            Dictionary<string, Action> handlers = new Dictionary<string, Action>();
+            
+            handlers.Add("not_enough_resource", HandleNoresourceError);
+            
+        }
+
+
+        void HandleNoresourceError()
+        {
+            
+        }
+        
+        
+        
+        
         
         
     }

@@ -9,12 +9,12 @@ namespace Script.dto
 
         [JsonProperty("jsonConfig")] public CardConfig JsonConfig { get; set; }
 
-        [JsonProperty("card_id")] public string CardId { get; set; } 
+        [JsonProperty("card_id")] public int CardId { get; set; } 
     }
 
     public class CardConfig
     {
-        [JsonProperty("card_id")] public string CardId { get; set; }
+        [JsonProperty("card_id")] public int CardId { get; set; }
         [JsonProperty("story")] public string Story { get; set; }
 
         [JsonProperty("mana")] public int Mana { get; set; }

@@ -60,12 +60,13 @@ namespace Script
         };
 
 
-        private async Task<string> GetLeaderboardConfig()
+        private async Task GetLeaderboardConfig()
         {
             var dd = await client.RpcAsync(session, "leaderboard_tiers_list");
             Debug.Log(dd.Payload);
-            return "ddd";
+            
         }
+
 
         private async Task<string> ReadLeaderboards()
         {
@@ -164,11 +165,12 @@ namespace Script
             //     PastCount = 1,
             // });
             // Debug.Log(ser);
-            await AuthMany();
-            await ReadLeaderboards();
-            await GetLeaderboardConfig();
-            await ReadLeaderboardsAroundUser();
-            await ReadPastWeekLeaderboard();
+            // await AuthMany();
+            // await ReadLeaderboards();
+            // await GetLeaderboardConfig();
+            // await ReadLeaderboardsAroundUser();
+            // await ReadPastWeekLeaderboard();
+            
         }
     }
 }

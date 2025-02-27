@@ -6,7 +6,7 @@ namespace Script.config
 {
     public class CardConfig : ScriptableObject
     {
-        [field: SerializeField] public string Id { get; private set; }
+        [field: SerializeField] public int Id { get; private set; }
         [field: SerializeField] public string DisplayName { get; private set; }
 
         [field: SerializeField] public int Health { get; private set; }
