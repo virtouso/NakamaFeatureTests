@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7281c78b56d9cb6448f3d05db5a72469, type: 3}
   m_Name: CardConfig 3
   m_EditorClassIdentifier: 
-  <Id>k__BackingField: c4
+  <Id>k__BackingField: 3
   <DisplayName>k__BackingField: bruce lee
   <Health>k__BackingField: 1
   <Mana>k__BackingField: 1
