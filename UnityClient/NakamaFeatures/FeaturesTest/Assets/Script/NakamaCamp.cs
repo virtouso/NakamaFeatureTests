@@ -36,7 +36,7 @@ namespace Script
             socket = Nakama.Socket.From(client);
 
             // Authenticate with device ID
-            session = await client.AuthenticateEmailAsync("changdsdsizz@yahoo.com", "123456789", emailText.Split('@')[0]);
+            session = await client.AuthenticateEmailAsync("changdsdsizzzz@yahoo.com", "123456789", emailText.Split('@')[0]);
        //     session = await client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier);          
             
             Debug.LogError($"Authenticated: {session.Username}****{session.UserId}");
@@ -211,7 +211,7 @@ namespace Script
             // 5) message_code = "invalid_data_sent"  sent a card guid but card id is not the same as on server
             // 6) message_code = "violated_rarity" 
 
-            var res2 = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<ViolatedRarityCardsResponse>>(result.Payload);
+        //    var res2 = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<ViolatedRarityCardsResponse>>(result.Payload);
 
             // 7 ) message_code = "failed_to_write_player_data"   no secondary. database error
             // 8 ) message_code "ok" nothing to do. data saved
@@ -219,13 +219,13 @@ namespace Script
 
         private async Task BuyCard()
         {
-            var result = await client.RpcAsync(session, "camp/buy_card", JsonConvert.SerializeObject(new BuyCardRequest { CardId = "c6" }));
+            var result = await client.RpcAsync(session, "camp/buy_card", JsonConvert.SerializeObject(new BuyCardRequest { CardId = 6 }));
             Debug.LogError(result.Payload);
 
             // 1) "card_config_not_found"  no model. config requested not found
             // 2) "card_not_marketable" no model. you cant buy or sell this card
             // 3) "insufficient_resource" these resources are not enough  
-            var result1 = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<InsufficientWalletResponse>>(result.Payload);
+//            var result1 = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<InsufficientWalletResponse>>(result.Payload);
             // 4) "player_camp_data_not_found" database error. nothing to do no secondary
             // 5)"requested_card_type_already_maxed_out" no secondary. if you already have legendary card or 2 other type you cant buy it
             //6) "failed_to_write_player_data" database error. no secondary
@@ -245,7 +245,7 @@ namespace Script
 
         private async Task SellCard()
         {
-            var result = await client.RpcAsync(session, "camp/sell_card", JsonConvert.SerializeObject(new SellCardRequest() { CardGuid = "ca8e4258-ba9e-4c41-9f2b-61aca7130203" }));
+            var result = await client.RpcAsync(session, "camp/sell_card", JsonConvert.SerializeObject(new SellCardRequest() { CardGuid = "aaa0f608-5fa7-4bd6-b324-52f4f7896ba9" }));
             Debug.LogError(result.Payload);
             
             var regularRes= JsonConvert.DeserializeObject<WebClientReference.MetaResponse<string>>(result.Payload);
@@ -274,7 +274,7 @@ namespace Script
             // await GetPlayerAllHeroes();
             // await GetPlayerDeck();
             // await BuyCard();
-            // await SellCard();
+             await SellCard();
             //  await AddOrUpdatePlayerData();
         }
     }
@@ -314,7 +314,7 @@ namespace Script
 
     public class BuyCardRequest
     {
-        [JsonProperty("card_id")] public string CardId { get; set; }
+        [JsonProperty("card_id")] public int CardId { get; set; }
     }
 
     public class SellCardRequest
