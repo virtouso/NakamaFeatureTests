@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Nakama;
 using Newtonsoft.Json;
 using UnityEngine;
+using ApiResponseException = Satori.ApiResponseException;
 
 namespace Script
 {
@@ -61,9 +62,22 @@ namespace Script
 
         private async Task SendMatchResult()
         {
-            var obj = new { match_id = "1234", winner = "ec50892f-fb12-4381-8ea7-2c24deb34b1b", loser = "c0e25509-5224-4626-9b9e-cb0ee218c115", winner_hero = "hunter", loser_hero = "hunter" };
-            var result = await client.RpcAsync(session, "match/match_result", JsonConvert.SerializeObject(obj));
-            Debug.Log(result.Payload);
+            var obj = new
+            {
+                match_id = "1234", winner = "67b8b065-e538-40a4-804d-6c1b9bdc3d03",
+                loser = "e59a4811-d86f-4c7a-8514-b45cf6b8fc88", winner_hero = 1, loser_hero = 1
+            };
+            try
+            {
+                var result = await client.RpcAsync(session, "match/match_result", JsonConvert.SerializeObject(obj));
+                Debug.Log(result.Payload);
+            }
+            catch (ApiResponseException ex)
+            {
+                Debug.Log(ex.Source);
+            }
+
+        
         }
 
 
@@ -73,7 +87,7 @@ namespace Script
                 await AuthenticateAsChangiz();
         
                 await AuthenticateAsEssi();
-       //     await SendMatchResult();
+           // await SendMatchResult();
         }
     }
 }

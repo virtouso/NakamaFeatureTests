@@ -12,7 +12,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Script
 {
-    public class NakamaCamp : MonoBehaviour
+    public class NakamaCamp : MonoBehaviour 
     {
         [SerializeField] private CardsList cardsList;
 
@@ -247,7 +247,6 @@ namespace Script
         {
             var result = await client.RpcAsync(session, "camp/sell_card", JsonConvert.SerializeObject(new SellCardRequest() { CardGuid = "aaa0f608-5fa7-4bd6-b324-52f4f7896ba9" }));
             Debug.LogError(result.Payload);
-            
             var regularRes= JsonConvert.DeserializeObject<WebClientReference.MetaResponse<string>>(result.Payload);
             
            //  1) "player_does_not_own_the_card" no secondary result
@@ -263,18 +262,18 @@ namespace Script
         private async void Start()
         {
             await Authenticate();
-            await GetHeroesConfig();
-            await GetHeroesConfigsModeled();
+         //   await GetHeroesConfig();
+         //   await GetHeroesConfigsModeled();
          //   await RemoveCardWithId();
-           // await RemoveAllCards(); 
+            await RemoveAllCards(); 
 
-             await GetPlayerCampConfigs();
-             await GetPlayerCampAllData();
+        //     await GetPlayerCampConfigs();
+         //    await GetPlayerCampAllData();
             // await GetPlayerCards();
             // await GetPlayerAllHeroes();
             // await GetPlayerDeck();
             // await BuyCard();
-             await SellCard();
+      //       await SellCard();
             //  await AddOrUpdatePlayerData();
         }
     }
