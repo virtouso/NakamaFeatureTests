@@ -12,7 +12,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace Script
 {
-    public class NakamaCamp : MonoBehaviour 
+    public class NakamaCamp : MonoBehaviour
     {
         [SerializeField] private CardsList cardsList;
 
@@ -36,9 +36,10 @@ namespace Script
             socket = Nakama.Socket.From(client);
 
             // Authenticate with device ID
-            session = await client.AuthenticateEmailAsync("changdsdsizzzz@yahoo.com", "123456789", emailText.Split('@')[0]);
-       //     session = await client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier);          
-            
+            session = await client.AuthenticateEmailAsync("changdsdsizzzz@yahoo.com", "123456789",
+                emailText.Split('@')[0]);
+            //     session = await client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier);          
+
             Debug.LogError($"Authenticated: {session.Username}****{session.UserId}");
 
             await socket.ConnectAsync(session);
@@ -74,7 +75,7 @@ namespace Script
                 };
                 var data = JsonConvert.SerializeObject(req);
                 var res = await client.RpcAsync(session, "admin/cards/send_card_config", data);
-           //     var modeled = JsonConvert.DeserializeObject<string>(res.Payload); // only result is ok!
+                //     var modeled = JsonConvert.DeserializeObject<string>(res.Payload); // only result is ok!
                 Debug.Log(res.Payload);
             }
 
@@ -93,14 +94,18 @@ namespace Script
         private async Task GetPlayerCards()
         {
             var result = await client.RpcAsync(session, "camp/get_player_cards");
-            var modeled = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<Dictionary<string, PlayerCardData>>>(result.Payload);
+            var modeled =
+                JsonConvert.DeserializeObject<WebClientReference.MetaResponse<Dictionary<string, PlayerCardData>>>(
+                    result.Payload);
         }
 
         private async Task GetPlayerCampAllData()
         {
             var result = await client.RpcAsync(session, "camp/get_player_camp_all_data");
             Debug.LogError(result.Payload);
-            var des = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<Camp>>(result.Payload); // no secondary response model
+            var des = JsonConvert
+                .DeserializeObject<
+                    WebClientReference.MetaResponse<Camp>>(result.Payload); // no secondary response model
         }
 
 
@@ -108,10 +113,11 @@ namespace Script
         {
             var result = await client.RpcAsync(session, "camp/get_camp_configs");
             Debug.LogError(result.Payload);
-      
-            
 
-            var des = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<CampConfigResponse>>(result.Payload); // no secondary response model
+
+            var des = JsonConvert
+                .DeserializeObject<
+                    WebClientReference.MetaResponse<CampConfigResponse>>(result.Payload); // no secondary response model
             //    return des;
         }
 
@@ -125,56 +131,62 @@ namespace Script
 
             [JsonProperty("max_permitted_same_non_legendary_type")]
             public int MaxPermittedSameNonLegendaryType { get; set; }
-        }        
-        
- 
-                
+        }
+
+
         private async Task GetHeroesConfig()
         {
             var dd = await client.RpcAsync(session, "general_configs/heroes_data");
             Debug.Log(dd.Payload);
-            
         }
-        
+
         private async Task GetHeroesConfigsModeled()
         {
             var dd = await client.RpcAsync(session, "general_configs/heroes_data_modeled");
             Debug.Log(dd.Payload);
-            
         }
 
         private async Task RemoveCardWithId()
         {
-            var dd = await client.RpcAsync(session, "admin/cards/delete_card_with_id","c2");
+            var dd = await client.RpcAsync(session, "admin/cards/delete_card_with_id", "c2");
             Debug.Log(dd.Payload);
-            
         }
+
         private async Task RemoveAllCards()
         {
             var dd = await client.RpcAsync(session, "admin/cards/delete_all_cards");
             Debug.Log(dd.Payload);
-            
         }
-        
-        
+
+
         private async Task GetPlayerAllHeroes()
         {
             var result = await client.RpcAsync(session, "camp/get_player_heroes");
             Debug.LogError(result.Payload);
 
             //   var des = JsonConvert.DeserializeObject<Camp>(result.Payload);
-            var modeled = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<List<string>>>(result.Payload); // no secondary response
+            var modeled =
+                JsonConvert.DeserializeObject<WebClientReference.MetaResponse<List<string>>>(
+                    result.Payload); // no secondary response
         }
 
-   
+        private async Task AddPlayerHero()
+        {
+            var result = await client.RpcAsync(session, "camp/add_player_heroes",JsonConvert.SerializeObject(new { hero_id = 30 }));
+            Debug.LogError(result.Payload);
+            var modeled = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<List<string>>>(result.Payload);
+        }
+
+
         private async Task GetPlayerDeck()
         {
-            var result = await client.RpcAsync(session, "camp/get_player_deck", JsonConvert.SerializeObject(new GetPlayerDeckRequest
-            {
-                DeckIndex = 0,
-                HeroID = "hunter"
-            }));
-            var data = JsonConvert.DeserializeObject<WebClientReference.MetaResponse< PlayerHeroDeck>>(result.Payload);
+            var result = await client.RpcAsync(session, "camp/get_player_deck", JsonConvert.SerializeObject(
+                new GetPlayerDeckRequest
+                {
+                    DeckIndex = 0,
+                    HeroID = "hunter"
+                }));
+            var data = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<PlayerHeroDeck>>(result.Payload);
         }
 
 
@@ -198,7 +210,8 @@ namespace Script
                 RequestDeckCards = req
             };
 
-            var result = await client.RpcAsync(session, "camp/add_or_update_player_deck", JsonConvert.SerializeObject(data));
+            var result = await client.RpcAsync(session, "camp/add_or_update_player_deck",
+                JsonConvert.SerializeObject(data));
             Debug.LogError(result.Payload);
 
             // 1) message_code = bad_request no secondary response
@@ -211,7 +224,7 @@ namespace Script
             // 5) message_code = "invalid_data_sent"  sent a card guid but card id is not the same as on server
             // 6) message_code = "violated_rarity" 
 
-        //    var res2 = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<ViolatedRarityCardsResponse>>(result.Payload);
+            //    var res2 = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<ViolatedRarityCardsResponse>>(result.Payload);
 
             // 7 ) message_code = "failed_to_write_player_data"   no secondary. database error
             // 8 ) message_code "ok" nothing to do. data saved
@@ -219,7 +232,8 @@ namespace Script
 
         private async Task BuyCard()
         {
-            var result = await client.RpcAsync(session, "camp/buy_card", JsonConvert.SerializeObject(new BuyCardRequest { CardId = 6 }));
+            var result = await client.RpcAsync(session, "camp/buy_card",
+                JsonConvert.SerializeObject(new BuyCardRequest { CardId = 6 }));
             Debug.LogError(result.Payload);
 
             // 1) "card_config_not_found"  no model. config requested not found
@@ -245,35 +259,38 @@ namespace Script
 
         private async Task SellCard()
         {
-            var result = await client.RpcAsync(session, "camp/sell_card", JsonConvert.SerializeObject(new SellCardRequest() { CardGuid = "aaa0f608-5fa7-4bd6-b324-52f4f7896ba9" }));
+            var result = await client.RpcAsync(session, "camp/sell_card",
+                JsonConvert.SerializeObject(new SellCardRequest()
+                    { CardGuid = "aaa0f608-5fa7-4bd6-b324-52f4f7896ba9" }));
             Debug.LogError(result.Payload);
-            var regularRes= JsonConvert.DeserializeObject<WebClientReference.MetaResponse<string>>(result.Payload);
-            
-           //  1) "player_does_not_own_the_card" no secondary result
-           // 2) "card_config_not_found" no secondary
-           // 3) "card_not_marketable" dto or secondary
-           // 4)  "error_update_wallet" server database error no secondary
-          // 5)  "failed_to_write_player_data" database error. no dto
-          // 6) "ok" card sold and resources added to wallet no secondary 
-          
-    
+            var regularRes = JsonConvert.DeserializeObject<WebClientReference.MetaResponse<string>>(result.Payload);
+
+            //  1) "player_does_not_own_the_card" no secondary result
+            // 2) "card_config_not_found" no secondary
+            // 3) "card_not_marketable" dto or secondary
+            // 4)  "error_update_wallet" server database error no secondary
+            // 5)  "failed_to_write_player_data" database error. no dto
+            // 6) "ok" card sold and resources added to wallet no secondary 
         }
 
         private async void Start()
         {
             await Authenticate();
-         //   await GetHeroesConfig();
-         //   await GetHeroesConfigsModeled();
-         //   await RemoveCardWithId();
-            await RemoveAllCards(); 
+            //   await GetHeroesConfig();
+            //   await GetHeroesConfigsModeled();
+            //   await RemoveCardWithId();
+         //   await RemoveAllCards();
 
-        //     await GetPlayerCampConfigs();
-         //    await GetPlayerCampAllData();
+            //     await GetPlayerCampConfigs();
+            //    await GetPlayerCampAllData();
             // await GetPlayerCards();
-            // await GetPlayerAllHeroes();
+            await AddPlayerHero();
+            await GetPlayerAllHeroes();
+            
+            
             // await GetPlayerDeck();
             // await BuyCard();
-      //       await SellCard();
+            //       await SellCard();
             //  await AddOrUpdatePlayerData();
         }
     }
