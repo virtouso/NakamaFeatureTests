@@ -29,7 +29,7 @@ namespace Script
             socket = Nakama.Socket.From(client);
 
             // Authenticate with device ID
-            session = await client.AuthenticateEmailAsync("changdgfgfsdsiz@yahoo.com", "123456789", emailText.Split('@')[0]);
+            session = await client.AuthenticateEmailAsync("chan@yahoo.com", "123456789", emailText.Split('@')[0]);
 
             Debug.LogError($"Authenticated: {session.Username}****{session.UserId}");
             //  await client.LinkDeviceAsync(session, SystemInfo.deviceUniqueIdentifier);
@@ -43,7 +43,7 @@ namespace Script
         {
             try
             {
-                var obj = new { id = 2 };
+                var obj = new { id = 1 };
                 var result = await client.RpcAsync(session, "user_resource/give_card_back", JsonConvert.SerializeObject(obj));
                 Debug.Log(result.Payload);
             }
@@ -63,7 +63,7 @@ namespace Script
         {
             try
             {
-                var obj = new { id = 2 };
+                var obj = new { id = 1 };
                 var result = await client.RpcAsync(session, "user_resource/give_emoji_pack", JsonConvert.SerializeObject(obj));
                 Debug.Log(result.Payload);
             }
@@ -83,7 +83,7 @@ namespace Script
         {
             try
             {
-                var obj = new { id = 2 };
+                var obj = new { id = 1 };
                 var result = await client.RpcAsync(session, "user_resource/give_ground", JsonConvert.SerializeObject(obj));
                 Debug.Log(result.Payload);
             }
@@ -184,11 +184,11 @@ namespace Script
         {
             await Authenticate();
             await GetResources();
-         //   await GiveCardBack();
-         //   await GiveEmojiPack();
-         //   await GiveGround();
-        //    await UpdateActiveGround();
-         //   await UpdateActiveCardBack();
+            await GiveCardBack();
+            await GiveEmojiPack();
+            await GiveGround();
+            await UpdateActiveGround();
+            await UpdateActiveCardBack();
             await UpdateActiveEmojis();
         }
     }
