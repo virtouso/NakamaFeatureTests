@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Script
 {
-    public class NakamaAdmin: MonoBehaviour
+    public class NakamaAdmin : MonoBehaviour
     {
         private const string scheme = "http";
         private const string host = "127.0.0.1";
@@ -29,36 +29,35 @@ namespace Script
             socket = Nakama.Socket.From(client);
 
             // Authenticate with device ID
-            session = await client.AuthenticateEmailAsync("changiz@yahoo.com", "123456789", emailText.Split('@')[0]);
-          
+            session = await client.AuthenticateEmailAsync("changdgfgfsdsiz@yahoo.com", "123456789", emailText.Split('@')[0]);
+
             Debug.LogError($"Authenticated: {session.Username}****{session.UserId}");
-            await client.LinkDeviceAsync(session, SystemInfo.deviceUniqueIdentifier);
-            
+          //  await client.LinkDeviceAsync(session, SystemInfo.deviceUniqueIdentifier);
+
             await socket.ConnectAsync(session);
             Debug.LogError("Socket connected.");
         }
 
 
-        private async Task  GivePlayerPack()
+        private async Task GivePlayerPack()
         {
-            var obj = new {player_id=session.UserId, common=10,legendary=9 };
-            var result = await client.RpcAsync(session, "admin/card_pack/give_player_pack",JsonConvert.SerializeObject(obj));
-            Debug.Log(result.Payload);
-        }
-        
-        private async Task  RemovePack()
-        {
-            var obj = new {pack_id=""};
-            var result = await client.RpcAsync(session, "admin/card_pack/remove_pack",JsonConvert.SerializeObject(obj));
+            var obj = new { player_id = session.UserId, common = 10, legendary = 9 };
+            var result = await client.RpcAsync(session, "admin/card_pack/give_player_pack", JsonConvert.SerializeObject(obj));
             Debug.Log(result.Payload);
         }
 
-        private async Task  AddPack()
+        private async Task RemovePack()
         {
-            var obj = new {pack_id="1011", rarities=new  List<string>{"common","legendary","common","epic"}, chance= 10, rarity_type= "common" };
-            var result = await client.RpcAsync(session, "admin/card_pack/add_pack",JsonConvert.SerializeObject(obj));
+            var obj = new { pack_id = "" };
+            var result = await client.RpcAsync(session, "admin/card_pack/remove_pack", JsonConvert.SerializeObject(obj));
             Debug.Log(result.Payload);
-            
+        }
+
+        private async Task AddPack()
+        {
+            var obj = new { pack_id = "1011", rarities = new List<string> { "common", "legendary", "common", "epic" }, chance = 10, rarity_type = "common" };
+            var result = await client.RpcAsync(session, "admin/card_pack/add_pack", JsonConvert.SerializeObject(obj));
+            Debug.Log(result.Payload);
         }
 
         private async Task ListPacks()
@@ -67,14 +66,22 @@ namespace Script
             Debug.Log(result.Payload);
         }
 
+
+        private async Task RemoveUser()
+        {
+            var result = await client.RpcAsync(session, "admin/user/remove_user",
+                JsonConvert.SerializeObject( new {user_id = "ac364758-2bf0-4d03-b93a-e206a599570e"}));
+            Debug.Log(result.Payload);
+        }
+
         private async void Start()
         {
-          await  Authenticate();
-
-       //   await AddPack();
-       //   await RemovePack();
-          await GivePlayerPack();
-       //await ListPacks();
+            await Authenticate();
+            await RemoveUser();
+            //   await AddPack();
+            //   await RemovePack();
+            // await GivePlayerPack();
+            //await ListPacks();
         }
     }
 }

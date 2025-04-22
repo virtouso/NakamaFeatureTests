@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nakama;
@@ -36,7 +37,7 @@ namespace Script
             socket = Nakama.Socket.From(client);
 
             // Authenticate with device ID
-            session = await client.AuthenticateEmailAsync("changdsdsizzzz@yahoo.com", "123456789",
+            session = await client.AuthenticateEmailAsync("changdsdsizzfdsfdzz@yahoo.com", "123456789",
                 emailText.Split('@')[0]);
             //     session = await client.AuthenticateDeviceAsync(SystemInfo.deviceUniqueIdentifier);          
 
@@ -159,6 +160,25 @@ namespace Script
         }
 
 
+        public async Task Chain()
+        {
+            try
+            {
+                var dd = await client.RpcAsync(session, "test_chain");
+                Debug.Log(dd.Payload);
+            }
+            catch (ApiResponseException e)
+            {
+                Console.WriteLine(e);
+             
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+          
+            }
+        }
+
         private async Task GetPlayerAllHeroes()
         {
             var result = await client.RpcAsync(session, "camp/get_player_heroes");
@@ -276,18 +296,19 @@ namespace Script
         private async void Start()
         {
             await Authenticate();
+            await Chain();
             //   await GetHeroesConfig();
             //   await GetHeroesConfigsModeled();
             //   await RemoveCardWithId();
-         //   await RemoveAllCards();
+            //   await RemoveAllCards();
 
             //     await GetPlayerCampConfigs();
             //    await GetPlayerCampAllData();
             // await GetPlayerCards();
-            await AddPlayerHero();
-            await GetPlayerAllHeroes();
-            
-            
+            // await AddPlayerHero();
+            // await GetPlayerAllHeroes();
+
+
             // await GetPlayerDeck();
             // await BuyCard();
             //       await SellCard();
