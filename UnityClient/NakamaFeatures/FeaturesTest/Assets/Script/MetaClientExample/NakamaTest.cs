@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Nakama;
+using Newtonsoft.Json;
 using UnityEngine;
 using ApiResponseException = Nakama.ApiResponseException;
 
@@ -94,11 +95,14 @@ namespace Script.MetaClientExample
             {
                 Debug.Log(e);
             }
+        }
 
 
+        private async Task TestChain()
+        {
             try
             {
-                res = await client.RpcAsync(session, "test/test_unhandled");
+                var res = await client.RpcAsync(session, "test_chain",JsonConvert.SerializeObject( new {name= "ali", age= 20,married= false, }));
                 Debug.Log(res.Payload);
             }
             catch (ApiResponseException e)
@@ -111,12 +115,10 @@ namespace Script.MetaClientExample
             }
         }
 
-
         private async void Start()
         {
             await Authenticate();
-            await TestAll();
+            await TestChain();
         }
-
     }
 }

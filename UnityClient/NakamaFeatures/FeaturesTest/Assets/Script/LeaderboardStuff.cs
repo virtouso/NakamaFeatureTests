@@ -80,6 +80,26 @@ namespace Script
             }
         }
 
+        private async Task GetMyTier()
+        {
+            try
+            {
+                //    var obj = new { id = 1 };
+                var result = await client.RpcAsync(session, "leaderboard/get_my_tier");
+                Debug.Log(result.Payload);
+            }
+            catch (ApiResponseException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
 
         private async Task UpdateTierConfig()
         {
@@ -87,11 +107,25 @@ namespace Script
             {
                 //    var obj = new { id = 1 };
                 var result = await client.RpcAsync(session, "admin/leaderboard/set_reward_for_tier",
-                    JsonConvert.SerializeObject(new
+                    JsonConvert.SerializeObject(new LeaderboardTierRewardConfig
                     {
-                        tier_id = "marble_1",
-                        wallet_resources = new Dictionary<string, long>() { { "stone", 10 } },
-                        assets = new Dictionary<string, List<int>>() { { "ground", new List<int>(){1} } },
+             TierId = "marble_1",
+                        RankRangeRewards= new List<LeaderboardTierRankRewardConfig>()
+                        {
+                            {new LeaderboardTierRankRewardConfig
+                            {
+                                Assets = new Dictionary<string, List<int>>(){ 
+                                    ["ground"]= new List<int>{1,2 ,6},
+                                    ["card_back"]=new List<int>{1,2 ,6}
+                                },
+                                RankRangeEnd = 0,
+                                RankRangeStart = 0,
+                                WalletResources = new Dictionary<string, long>
+                                {
+                                    ["stone"]=100
+                                }
+                            }}
+                        }
                     }));
                 Debug.Log(result.Payload);
             }
@@ -114,6 +148,34 @@ namespace Script
             await GetTiersList();
             await UpdateTierConfig();
             await GetTiersRewards();
+            await GetMyTier();
         }
     }
 }
+
+
+// models 
+public class LeaderboardTierRewardConfig
+{
+    [JsonProperty("tier_id")]
+    public string TierId { get; set; }
+
+    [JsonProperty("rank_range_rewards")]
+    public List<LeaderboardTierRankRewardConfig> RankRangeRewards { get; set; }
+}
+
+public class LeaderboardTierRankRewardConfig
+{
+    [JsonProperty("rank_range_start")]
+    public int RankRangeStart { get; set; }
+
+    [JsonProperty("rank_range_end")]
+    public int RankRangeEnd { get; set; }
+
+    [JsonProperty("wallet_resources")]
+    public Dictionary<string, long> WalletResources { get; set; }
+
+    [JsonProperty("assets")]
+    public Dictionary<string, List<int>> Assets { get; set; }
+}
+
