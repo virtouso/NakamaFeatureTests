@@ -100,7 +100,27 @@ namespace Script
             }
         }
         
-
+        private async Task GetRemainingTime()
+        {
+            try
+            {
+                //    var obj = new { id = 1 };
+                var result = await client.RpcAsync(session, "leaderboard/get_remaining_time");
+                Debug.Log(result.Payload);
+            }
+            catch (ApiResponseException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        
+        
         private async Task UpdateTierConfig()
         {
             try
@@ -145,6 +165,7 @@ namespace Script
         private async void Start()
         {
             await Authenticate();
+            await GetRemainingTime();
             await GetTiersList();
             await UpdateTierConfig();
             await GetTiersRewards();

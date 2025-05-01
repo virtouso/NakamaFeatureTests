@@ -159,17 +159,17 @@ namespace Script
 
         private async void Start()
         {
-            // var ser =   JsonConvert.SerializeObject( new LeaderboardRequest
-            // {
-            //     LeaderboardId = "ddd",
-            //     PastCount = 1,
-            // });
-            // Debug.Log(ser);
-            // await AuthMany();
-            // await ReadLeaderboards();
-            // await GetLeaderboardConfig();
-            // await ReadLeaderboardsAroundUser();
-            // await ReadPastWeekLeaderboard();
+            var ser =   JsonConvert.SerializeObject( new LeaderboardRequest
+            {
+                LeaderboardId = "ddd",
+                PastCount = 1,
+            });
+            Debug.Log(ser);
+            await AuthMany();
+            await ReadLeaderboards();
+            await GetLeaderboardConfig();
+            await ReadLeaderboardsAroundUser();
+            await ReadPastWeekLeaderboard();
             
         }
     }
